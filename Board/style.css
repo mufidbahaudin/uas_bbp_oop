@@ -1,0 +1,118 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: radial-gradient(circle at 10% 20%, rgb(50, 172, 109) 0%, rgb(209, 251, 155) 100.2%);
+    font-family: 'Arial', sans-serif;
+}
+
+canvas {
+    border: 3px solid black;
+    background: linear-gradient(109.6deg, rgb(72, 200, 160) 11.2%, rgb(32, 40, 48) 91.3%);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.customAlert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%); 
+    padding: 20px;
+    background: linear-gradient(to bottom, #ff3333, #cc0000); 
+    color: #fff; 
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    display: none; 
+    animation: slideIn 0.3s ease-out; 
+}
+
+
+.customAlert h2 {
+    margin-top: 0;
+}
+
+.customAlert button {
+    background-color: #fff;
+    color: #ff0000; 
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.customAlert button:hover {
+    background-color: #ddd;
+}
+
+#backButton button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    position: fixed; top: 10px; left: 10px;
+}
+
+#backButton button:hover {
+    background-color: antiquewhite;
+}
+
+#back {
+    width: 50px;
+}
+
+#themeDropdownContainer {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-family: 'Quicksand', sans-serif;
+}
+
+#themeDropdown {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+#themeDropdown:hover {
+    background-color: greenyellow;
+}
+
+select {
+    width: 150px;
+    text-align: center;
+}
+
+.red-popup {
+    background-color: red;
+    /* Gaya tambahan sesuai kebutuhan Anda */
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Warna hitam dengan opacity 0.5 */
+    display: none; /* Sembunyikan secara default */
+    z-index: 1; /* Pastikan di atas elemen lain */
+}

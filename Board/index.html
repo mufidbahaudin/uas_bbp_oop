@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="snakeCanvas" width="500" height="500"></canvas>
+    <div class="customAlert">
+        <h2>Game Over!</h2>
+        <p>Your Score: <span id="final-score"></span></p>
+        <button id="restart-button">Try Again</button>
+        <button id="back-to-menu-button">Quit</button>
+    </div>
+    <div id="themeDropdownContainer">
+        <label for="themeDropdown">Select Theme : </label>
+        <select id="themeDropdown">
+            <option value="amazon">Amazon</option>
+            <option value="desert">Desert</option>
+            <option value="abyss">Abyss</option>
+            <option value="ocean">Ocean</option>
+            <option value="space">Space</option>
+            <option value="volcano">Volcano</option>
+        </select>
+    </div>
+    <script src="script.js"></script>
+    <a href="/Menu/index.html" id="backButton">
+        <button><img src="img/kiri.png" alt="kiri" id="back"></button>
+    </a>
+</body>
+</html>

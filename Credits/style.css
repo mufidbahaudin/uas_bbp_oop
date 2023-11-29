@@ -1,0 +1,38 @@
+body {
+    text-align: center;
+    background: radial-gradient(circle at 10% 20%, rgb(50, 172, 109) 0%, rgb(209, 251, 155) 100.2%);
+    color: white;
+    font-family: 'Quicksand', sans-serif;
+}
+
+hr {
+    width: 300px;
+}
+
+.title {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: black;
+    font-size: 50px;
+}
+
+.center {
+    margin-top: 10vh; 
+}
+
+#backButton button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    position: fixed; top: 10px; left: 10px;
+}
+
+#backButton button:hover {
+    background-color: antiquewhite;
+}
+
+#back {
+    width: 50px;
+}
