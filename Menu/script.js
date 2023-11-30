@@ -1,18 +1,49 @@
 class AnimationController {
     constructor() {
-        this.menu = document.querySelector('.menu');
-        this.playButton = document.getElementById('playButton');
-        this.tipsButton = document.getElementById('tipsButton');
-        this.creditsButton = document.getElementById('creditsButton');
+        this._menu = document.querySelector('.menu');
+        this._playButton = document.getElementById('playButton');
+        this._tipsButton = document.getElementById('tipsButton');
+        this._creditsButton = document.getElementById('creditsButton');
 
         setTimeout(() => {
             this.animateTitle();
-        }, 1000); 
+        }, 1000);
 
-        
         setTimeout(() => {
             this.showMenu();
-        }, 1500); 
+        }, 1500);
+    }
+
+    get menu() {
+        return this._menu;
+    }
+
+    set menu(value) {
+        this._menu = value;
+    }
+
+    get playButton() {
+        return this._playButton;
+    }
+
+    set playButton(value) {
+        this._playButton = value;
+    }
+
+    get tipsButton() {
+        return this._tipsButton;
+    }
+
+    set tipsButton(value) {
+        this._tipsButton = value;
+    }
+
+    get creditsButton() {
+        return this._creditsButton;
+    }
+
+    set creditsButton(value) {
+        this._creditsButton = value;
     }
 
     animateTitle() {
@@ -20,20 +51,18 @@ class AnimationController {
     }
 
     showMenu() {
-        this.menu.classList.add('show');
+        this._menu.classList.add('show');
     }
 }
 
 class ExtendedAnimationController extends AnimationController {
     constructor() {
-        super(); // Call the parent class constructor
-
+        super();
     }
 
-    // Override the base class method
     animateTitle() {
         console.log('Game Snake');
-        super.animateTitle(); 
+        super.animateTitle();
     }
 }
 

@@ -3,10 +3,10 @@ class SnakeGame {
         this.canvas = document.getElementById("snakeCanvas");
         this.ctx = this.canvas.getContext("2d");
         this.box = 20;
-        this.snake = new EnhancedSnake(10, 10, this.box, 1); // Use EnhancedSnake instead of Snake
-        this.food = new Food(this.box);
-        this.direction = undefined;
-        this.score = 0;
+        this._snake = new EnhancedSnake(10, 10, this.box, 1); 
+        this._food = new Food(this.box);
+        this._direction = undefined;
+        this._score = 0;
 
         document.addEventListener("keydown", this.directionHandler.bind(this));
         document.querySelector(".customAlert button").addEventListener("click", this.restartGame.bind(this));
@@ -16,28 +16,43 @@ class SnakeGame {
         this.gameLoop();
     }
 
+    
+    get snake() {
+        return this._snake;
+    }
+
+    
+    set direction(direction) {
+        this._direction = direction;
+    }
+
+    
+    get score() {
+        return this._score;
+    }
+
     directionHandler(event) {
-        this.snake.changeDirection(event.keyCode);
+        this._snake.changeDirection(event.keyCode);
     }
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.snake.draw(this.ctx);
-        this.food.draw(this.ctx);
+        this._snake.draw(this.ctx);
+        this._food.draw(this.ctx);
 
         this.ctx.fillStyle = "black";
         this.ctx.font = "10px Roboto";
-        this.ctx.fillText("Score: " + this.score, 10, 20);
+        this.ctx.fillText("Score: " + this._score, 10, 20);
 
-        this.snake.move(this.food, () => {
-            this.score += 10;
-            this.food.generateNewPosition();
+        this._snake.move(this._food, () => {
+            this._score += 10;
+            this._food.generateNewPosition();
         });
     }
 
     collision() {
-        return this.snake.checkCollision(this.canvas);
+        return this._snake.checkCollision(this.canvas);
     }
 
     gameLoop() {
@@ -54,16 +69,16 @@ class SnakeGame {
     showGameOverPopup() {
         const popup = document.querySelector(".customAlert");
         const finalScoreElement = document.getElementById("final-score");
-        finalScoreElement.textContent = this.score;
+        finalScoreElement.textContent = this._score;
         popup.style.display = "block";
     }
 
     restartGame() {
         const popup = document.querySelector(".customAlert");
         popup.style.display = "none";
-        this.snake = new EnhancedSnake(10, 10, this.box, 1); // Use EnhancedSnake instead of Snake
-        this.direction = undefined;
-        this.score = 0;
+        this._snake = new EnhancedSnake(10, 10, this.box, 1); // Use EnhancedSnake instead of Snake
+        this._direction = undefined;
+        this._score = 0;
         this.gameLoop();
     }
 
@@ -78,7 +93,7 @@ class SnakeGame {
         const body = document.body;
         const canvas = document.getElementById("snakeCanvas");
 
-        switch (selectedTheme) {
+            switch (selectedTheme) {
             case "amazon":
                 body.style.background = "radial-gradient(circle at 10% 20%, rgb(50, 172, 109) 0%, rgb(209, 251, 155) 100.2%)";
                 canvas.style.background = "linear-gradient(109.6deg, rgb(72, 200, 160) 11.2%, rgb(32, 40, 48) 91.3%)";
@@ -114,114 +129,142 @@ class SnakeGame {
 
 class Snake {
     constructor(x, y, box) {
-        this.body = [{ x: x * box, y: y * box }];
+        this._body = [{ x: x * box, y: y * box }]; 
+        this._direction = undefined;
         this.box = box;
-        this.direction = undefined;
+    }
+
+    
+    get body() {
+        return this._body;
+    }
+
+   
+    set direction(direction) {
+        this._direction = direction;
     }
 
     changeDirection(keyCode) {
-        if (keyCode === 37 && this.direction !== "RIGHT") {
-            this.direction = "LEFT";
-        } else if (keyCode === 38 && this.direction !== "DOWN") {
-            this.direction = "UP";
-        } else if (keyCode === 39 && this.direction !== "LEFT") {
-            this.direction = "RIGHT";
-        } else if (keyCode === 40 && this.direction !== "UP") {
-            this.direction = "DOWN";
+        if (keyCode === 37 && this._direction !== "RIGHT") {
+            this._direction = "LEFT";
+        } else if (keyCode === 38 && this._direction !== "DOWN") {
+            this._direction = "UP";
+        } else if (keyCode === 39 && this._direction !== "LEFT") {
+            this._direction = "RIGHT";
+        } else if (keyCode === 40 && this._direction !== "UP") {
+            this._direction = "DOWN";
         }
     }
 
     draw(ctx) {
-        for (let i = 0; i < this.body.length; i++) {
+        for (let i = 0; i < this._body.length; i++) {
             ctx.fillStyle = i === 0 ? "green" : "white";
-            ctx.fillRect(this.body[i].x, this.body[i].y, this.box, this.box);
+            ctx.fillRect(this._body[i].x, this._body[i].y, this.box, this.box);
 
             ctx.strokeStyle = "black";
-            ctx.strokeRect(this.body[i].x, this.body[i].y, this.box, this.box);
+            ctx.strokeRect(this._body[i].x, this._body[i].y, this.box, this.box);
         }
     }
 
     move(food, eatCallback) {
-        let snakeX = this.body[0].x;
-        let snakeY = this.body[0].y;
+        let snakeX = this._body[0].x;
+        let snakeY = this._body[0].y;
 
-        if (this.direction === "LEFT") snakeX -= this.box;
-        if (this.direction === "UP") snakeY -= this.box;
-        if (this.direction === "RIGHT") snakeX += this.box;
-        if (this.direction === "DOWN") snakeY += this.box;
+        if (this._direction === "LEFT") snakeX -= this.box;
+        if (this._direction === "UP") snakeY -= this.box;
+        if (this._direction === "RIGHT") snakeX += this.box;
+        if (this._direction === "DOWN") snakeY += this.box;
 
         if (snakeX === food.position.x && snakeY === food.position.y) {
             eatCallback();
         } else {
-            this.body.pop();
+            this._body.pop();
         }
 
         let newHead = { x: snakeX, y: snakeY };
-        this.body.unshift(newHead);
+        this._body.unshift(newHead);
     }
 
     checkCollision(canvas) {
-        for (let i = 1; i < this.body.length; i++) {
-            if (this.body[0].x === this.body[i].x && this.body[0].y === this.body[i].y) {
-                return true; // Snake collided with itself
+        for (let i = 1; i < this._body.length; i++) {
+            if (this._body[0].x === this._body[i].x && this._body[0].y === this._body[i].y) {
+                return true; 
             }
         }
 
         return (
-            this.body[0].x < 0 ||
-            this.body[0].x >= canvas.width ||
-            this.body[0].y < 0 ||
-            this.body[0].y >= canvas.height
+            this._body[0].x < 0 ||
+            this._body[0].x >= canvas.width ||
+            this._body[0].y < 0 ||
+            this._body[0].y >= canvas.height
         );
     }
 }
 
 class EnhancedSnake extends Snake {
     constructor(x, y, box, speed) {
-        super(x, y, box); // Call the constructor of the base class (Snake)
-        this.speed = speed;
+        super(x, y, box);
+        this._speed = speed; 
     }
 
-    // Override the move method to incorporate speed
-    move(food, eatCallback) {
-        let snakeX = this.body[0].x;
-        let snakeY = this.body[0].y;
+   
+    get speed() {
+        return this._speed;
+    }
 
-        if (this.direction === "LEFT") snakeX -= this.box * this.speed;
-        if (this.direction === "UP") snakeY -= this.box * this.speed;
-        if (this.direction === "RIGHT") snakeX += this.box * this.speed;
-        if (this.direction === "DOWN") snakeY += this.box * this.speed;
+    
+    set speed(speed) {
+        this._speed = speed;
+    }
+
+    
+    move(food, eatCallback) {
+        let snakeX = this._body[0].x;
+        let snakeY = this._body[0].y;
+
+        if (this._direction === "LEFT") snakeX -= this.box * this._speed;
+        if (this._direction === "UP") snakeY -= this.box * this._speed;
+        if (this._direction === "RIGHT") snakeX += this.box * this._speed;
+        if (this._direction === "DOWN") snakeY += this.box * this._speed;
 
         if (snakeX === food.position.x && snakeY === food.position.y) {
             eatCallback();
         } else {
-            this.body.pop();
+            this._body.pop();
         }
 
         let newHead = { x: snakeX, y: snakeY };
-        this.body.unshift(newHead);
+        this._body.unshift(newHead);
     }
 
-    // New method specific to EnhancedSnake class
+    
     boostSpeed() {
-        this.speed += 1;
+        this._speed += 1;
     }
 }
 
 class Food {
     constructor(box) {
         this.box = box;
-        this.position = { x: Math.floor(Math.random() * 20) * this.box, y: Math.floor(Math.random() * 20) * this.box };
+        this._position = { x: Math.floor(Math.random() * 20) * this.box, y: Math.floor(Math.random() * 20) * this.box };
+    }
+
+    
+    get position() {
+        return this._position;
     }
 
     draw(ctx) {
         ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, this.box, this.box);
+        ctx.fillRect(this._position.x, this._position.y, this.box, this.box);
     }
 
     generateNewPosition() {
-        this.position = { x: Math.floor(Math.random() * 20) * this.box, y: Math.floor(Math.random() * 20) * this.box };
+        this._position = { x: Math.floor(Math.random() * 20) * this.box, y: Math.floor(Math.random() * 20) * this.box };
     }
 }
 
+// Usage
 const snakeGame = new SnakeGame();
+console.log(snakeGame.snake.speed); 
+snakeGame.snake.speed = 1; 
