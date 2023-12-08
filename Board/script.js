@@ -1,21 +1,23 @@
+// konstruktor
 class SnakeGame {
     constructor() {
         this.canvas = document.getElementById("snakeCanvas");
-        this.ctx = this.canvas.getContext("2d");
-        this.box = 20;
-        this._snake = new EnhancedSnake(10, 10, this.box, 1); 
-        this._food = new Food(this.box);
-        this._direction = undefined;
-        this._score = 0;
+        this.ctx = this.canvas.getContext("2d"); // rendering 2D untuk canvas
+        this.box = 20; // ukuran dari kotak
+        this._snake = new EnhancedSnake(10, 10, this.box, 1); // koordinat ular 10, 10 | this.box, 1 (kecepatan awal dari ular)
+        this._food = new Food(this.box); // makanan dalam game
+        this._direction = undefined; // menyimpan arah saat ini dari ular
+        this._score = 0; // meyimpan score pemain, mulai dari skor 0
 
         document.addEventListener("keydown", this.directionHandler.bind(this));
         document.querySelector(".customAlert button").addEventListener("click", this.restartGame.bind(this));
         document.getElementById("back-to-menu-button").addEventListener("click", this.backToMenu.bind(this));
         document.getElementById("themeDropdown").addEventListener("change", this.changeBoardTheme.bind(this));
 
-        this.gameLoop();
+        this.gameLoop(); // memulai game loop utama, secara rekursif memanggil dirinya untuk permainan yang berkelanjutan.
     }
 
+    // getter & setter
     
     get snake() {
         return this._snake;
@@ -32,7 +34,7 @@ class SnakeGame {
     }
 
     directionHandler(event) {
-        this._snake.changeDirection(event.keyCode);
+        this._snake.changeDirection(event.keyCode); // Ini memungkinkan objek ular (_snake) untuk mengubah arahnya berdasarkan input keyboard pengguna.
     }
 
     draw() {
@@ -41,12 +43,12 @@ class SnakeGame {
         this._snake.draw(this.ctx);
         this._food.draw(this.ctx);
 
-        this.ctx.fillStyle = "black";
-        this.ctx.font = "10px Roboto";
-        this.ctx.fillText("Score: " + this._score, 10, 20);
+        this.ctx.fillStyle = "black"; // font score
+        this.ctx.font = "10px Roboto"; // font score
+        this.ctx.fillText("Score: " + this._score, 10, 20); // skor
 
         this._snake.move(this._food, () => {
-            this._score += 10;
+            this._score += 10; // setiap skor dikasih 10 poin
             this._food.generateNewPosition();
         });
     }
@@ -58,15 +60,15 @@ class SnakeGame {
     gameLoop() {
         if (this.collision()) {
             this.showGameOverPopup();
-            return;
+            return; 
         }
 
         this.draw();
 
-        setTimeout(() => this.gameLoop(), 100);
+        setTimeout(() => this.gameLoop(), 100); // kecepatan ular
     }
 
-    showGameOverPopup() {
+    showGameOverPopup() { // muncul popup game over
         const popup = document.querySelector(".customAlert");
         const finalScoreElement = document.getElementById("final-score");
         finalScoreElement.textContent = this._score;
@@ -79,10 +81,12 @@ class SnakeGame {
         this._snake = new EnhancedSnake(10, 10, this.box, 1); // Use EnhancedSnake instead of Snake
         this._direction = undefined;
         this._score = 0;
-        this.gameLoop();
+        this._food = new Food(this.box); // makanan dalam game
+        this._direction = undefined;
+        this.gameLoop(); // setiap klik restrart / try again maka game ulang dari awal
     }
 
-    backToMenu() {
+    backToMenu() { // ketika klik quit maka balik ke menu
         const popup = document.querySelector(".customAlert");
         popup.style.display = "none";
         window.location.href = "/Menu/index.html";
@@ -93,7 +97,7 @@ class SnakeGame {
         const body = document.body;
         const canvas = document.getElementById("snakeCanvas");
 
-            switch (selectedTheme) {
+            switch (selectedTheme) { // menguabah tema papan / select theme
             case "amazon":
                 body.style.background = "radial-gradient(circle at 10% 20%, rgb(50, 172, 109) 0%, rgb(209, 251, 155) 100.2%)";
                 canvas.style.background = "linear-gradient(109.6deg, rgb(72, 200, 160) 11.2%, rgb(32, 40, 48) 91.3%)";
@@ -158,7 +162,7 @@ class Snake {
 
     draw(ctx) {
         for (let i = 0; i < this._body.length; i++) {
-            ctx.fillStyle = i === 0 ? "green" : "white";
+            ctx.fillStyle = i === 0 ? "green" : "white"; // green : kepala ular, white: badan ular
             ctx.fillRect(this._body[i].x, this._body[i].y, this.box, this.box);
 
             ctx.strokeStyle = "black";
@@ -166,33 +170,36 @@ class Snake {
         }
     }
 
-    move(food, eatCallback) {
+    move(food, eatCallback) { // food : apakah ular bertabrakan dengan makanan
         let snakeX = this._body[0].x;
         let snakeY = this._body[0].y;
+        // mengambil koordinat x dan y dari kepala ular
 
         if (this._direction === "LEFT") snakeX -= this.box;
         if (this._direction === "UP") snakeY -= this.box;
         if (this._direction === "RIGHT") snakeX += this.box;
         if (this._direction === "DOWN") snakeY += this.box;
+        // mengubah koordinat kepala ular berdasarkan arah
 
         if (snakeX === food.position.x && snakeY === food.position.y) {
-            eatCallback();
+            eatCallback();// eatCallback adalah fungsi yang akan dipanggil jika ular memakan makanan.
         } else {
             this._body.pop();
         }
 
         let newHead = { x: snakeX, y: snakeY };
         this._body.unshift(newHead);
+        // Menambahkan objek yang mewakili kepala baru ular ke bagian depan array _body.
     }
 
-    checkCollision(canvas) {
+    checkCollision(canvas) { // bertanggung jawab bertabrakan dengan ular
         for (let i = 1; i < this._body.length; i++) {
             if (this._body[0].x === this._body[i].x && this._body[0].y === this._body[i].y) {
                 return true; 
             }
         }
 
-        return (
+        return ( // bertabrakan dengan papan canvas
             this._body[0].x < 0 ||
             this._body[0].x >= canvas.width ||
             this._body[0].y < 0 ||
@@ -201,6 +208,7 @@ class Snake {
     }
 }
 
+    // inheritance
 class EnhancedSnake extends Snake {
     constructor(x, y, box, speed) {
         super(x, y, box);
@@ -245,8 +253,8 @@ class EnhancedSnake extends Snake {
 
 class Food {
     constructor(box) {
-        this.box = box;
-        this._position = { x: Math.floor(Math.random() * 20) * this.box, y: Math.floor(Math.random() * 20) * this.box };
+        this.box = box; //  ukuran kotak makanan dan juga akan digunakan untuk menentukan posisi acak makanan.
+        this._position = { x: Math.floor(Math.random() * 20) * this.box, y: Math.floor(Math.random() * 20) * this.box }; // Properti yang menyimpan posisi acak awal makanan.
     }
 
     
@@ -255,11 +263,11 @@ class Food {
     }
 
     draw(ctx) {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "red"; // makanan ular
         ctx.fillRect(this._position.x, this._position.y, this.box, this.box);
     }
 
-    generateNewPosition() {
+    generateNewPosition() { // Metode ini digunakan untuk menghasilkan posisi acak baru untuk makanan.
         this._position = { x: Math.floor(Math.random() * 20) * this.box, y: Math.floor(Math.random() * 20) * this.box };
     }
 }
@@ -267,4 +275,4 @@ class Food {
 // Usage
 const snakeGame = new SnakeGame();
 console.log(snakeGame.snake.speed); 
-snakeGame.snake.speed = 1; 
+snakeGame.snake.speed = 1; // Memberikan nilai 1 kepada properti speed dari objek snake yang ada dalam objek snakeGame.
